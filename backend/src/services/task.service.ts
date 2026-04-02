@@ -103,11 +103,11 @@ export const taskService = {
 };
 
 function buildOrderBy(sortBy: string, order: string) {
-  const dir = order === 'asc' ? 'asc' : 'desc';
+  const dir = (order === 'asc' ? 'asc' : 'desc') as 'asc' | 'desc';
   switch (sortBy) {
-    case 'dueDate': return { dueDate: dir as const };
-    case 'title': return { title: dir as const };
-    case 'priority': return { priority: dir as const };
-    default: return { createdAt: dir as const };
+    case 'dueDate':  return { dueDate: dir };
+    case 'title':    return { title: dir };
+    case 'priority': return { priority: dir };
+    default:         return { createdAt: dir };
   }
 }
