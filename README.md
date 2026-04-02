@@ -1,32 +1,78 @@
 # TaskFlow ⚡
 
-A modern, full-stack **Task Management System** built with a glassmorphism design language. Clean architecture, secure JWT authentication, and a responsive UI that works beautifully on every screen size.
+A full-stack task management system with a glassmorphism UI, secure JWT authentication, and a clean REST API. Built with Node.js, Next.js, and TypeScript.
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.4-3178C6?style=flat-square&logo=typescript&logoColor=white)
 ![Next.js](https://img.shields.io/badge/Next.js-14-black?style=flat-square&logo=next.js)
 ![Node.js](https://img.shields.io/badge/Node.js-20-339933?style=flat-square&logo=node.js&logoColor=white)
 ![Prisma](https://img.shields.io/badge/Prisma-5-2D3748?style=flat-square&logo=prisma)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=flat-square&logo=postgresql&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+
+---
+
+## 🌐 Live Demo
+
+| Service | URL |
+|---|---|
+| Frontend | https://taskflow-kappa-rouge.vercel.app |
+| Backend API | https://taskflow-q8q4.onrender.com |
+| Health Check | https://taskflow-q8q4.onrender.com/health |
+| Repository | https://github.com/Avinashavi9161/taskflow |
+
+> The backend is hosted on Render's free tier. The first request after inactivity may take ~30 seconds to wake up.
 
 ---
 
 ## ✨ Features
 
-### Backend
-- **JWT Auth** — Short-lived access tokens (15m) + rotating refresh tokens (7d)
-- **Bcrypt** — Password hashing with a cost factor of 12
-- **Full Task CRUD** — Create, read, update, delete, and toggle task status
-- **Advanced Querying** — Pagination, full-text search, filtering by status/priority, multi-field sorting
-- **Input Validation** — express-validator on every route with descriptive error messages
-- **Security** — Helmet headers, CORS whitelisting, httpOnly cookie for refresh token
+**Authentication**
+- Register and login with email and password
+- JWT access tokens (15m) with rotating refresh tokens (7d)
+- Passwords hashed with bcrypt before storage
+- Silent token refresh via Axios interceptor — no unexpected logouts
 
-### Frontend
-- **Glassmorphism UI** — Frosted-glass cards with ambient gradient orbs and a subtle grid overlay
-- **Auth Flow** — Register / Login with Zod validation; automatic token refresh via Axios interceptor
-- **Task Dashboard** — Live stats, filter bar (search + status + priority + sort), animated task cards
-- **Responsive** — Mobile-first, works on all breakpoints
-- **Toast Notifications** — Success/error feedback on every action
-- **Zustand** — Lightweight global auth state with persistence
+**Task Management**
+- Create, edit, delete and toggle task status
+- Three status levels — pending, in progress, completed
+- Priority levels — low, medium, high
+- Due date support with overdue detection
+
+**Dashboard**
+- Live stats showing task counts per status
+- Search by title, filter by status or priority
+- Sort by date, due date, priority or title
+- Paginated task list
+- Toast notifications on every action
+- Fully responsive — works on mobile and desktop
+
+---
+
+## 🛠 Tech Stack
+
+**Backend**
+
+| Technology | Purpose |
+|---|---|
+| Node.js + Express | Server and routing |
+| TypeScript | Type safety |
+| Prisma ORM | Database access |
+| PostgreSQL | Database (Railway) |
+| JWT + bcrypt | Auth and password hashing |
+| express-validator | Input validation |
+| Helmet + CORS | Security headers |
+
+**Frontend**
+
+| Technology | Purpose |
+|---|---|
+| Next.js 14 | React framework with App Router |
+| TypeScript | Type safety |
+| Tailwind CSS | Styling with glassmorphism theme |
+| Zustand | Global auth state |
+| React Hook Form + Zod | Form handling and validation |
+| Axios | HTTP client with interceptors |
+| react-hot-toast | Toast notifications |
 
 ---
 
@@ -34,191 +80,161 @@ A modern, full-stack **Task Management System** built with a glassmorphism desig
 
 ```
 taskflow/
-├── backend/                  # Node.js + TypeScript API
+├── backend/
 │   └── src/
-│       ├── config/           # Environment config
-│       ├── controllers/      # Route handlers
-│       ├── middleware/       # Auth guard + validation runner
-│       ├── prisma/           # Schema (User, Task, RefreshToken)
-│       ├── routes/           # Express routers
-│       ├── services/         # Business logic layer
-│       ├── types/            # Shared TypeScript interfaces
-│       └── index.ts          # App entry point
+│       ├── config/           environment and constants
+│       ├── controllers/      request handlers
+│       ├── middleware/       auth guard, input validation
+│       ├── prisma/           database schema
+│       ├── routes/           express routers
+│       ├── services/         business logic layer
+│       └── types/            shared TypeScript interfaces
 │
-└── frontend/                 # Next.js 14 App Router
+└── frontend/
     └── src/
-        ├── app/
-        │   ├── (auth)/       # Login & Register pages
-        │   ├── dashboard/    # Main task dashboard
-        │   ├── globals.css   # Tailwind + glass utility classes
-        │   └── layout.tsx    # Root layout with Toaster
-        ├── components/
-        │   ├── layout/       # Navbar
-        │   └── tasks/        # TaskCard, TaskFormModal, Filters, Pagination, Stats
-        ├── hooks/            # useTasks — all task operations in one place
-        ├── lib/              # Axios instance with interceptors, utility helpers
-        ├── store/            # Zustand auth store
-        └── types/            # Shared TypeScript types
+        ├── app/              Next.js pages and layouts
+        ├── components/       UI components
+        ├── hooks/            useTasks data hook
+        ├── lib/              axios instance, utilities
+        ├── store/            Zustand auth store
+        └── types/            shared TypeScript types
 ```
 
 ---
 
 ## 🚀 Getting Started
 
-### Prerequisites
+**Prerequisites:** Node.js 18+
 
-- Node.js 18+
-- npm or pnpm
-
----
-
-### 1. Clone the repo
+**1. Clone the repo**
 
 ```bash
-git clone https://github.com/your-username/taskflow.git
+git clone https://github.com/Avinashavi9161/taskflow.git
 cd taskflow
 ```
 
----
-
-### 2. Set up the Backend
+**2. Set up the backend**
 
 ```bash
 cd backend
 npm install
-```
-
-Copy and configure the environment file:
-
-```bash
 cp .env.example .env
 ```
 
-Edit `.env` — the defaults work for local development, but **change the JWT secrets** before deploying:
-
-```env
-DATABASE_URL="file:./dev.db"
-PORT=4000
-CLIENT_URL=http://localhost:3000
-JWT_ACCESS_SECRET=change-me-to-something-strong
-JWT_REFRESH_SECRET=change-me-to-something-strong
-```
-
-Generate the Prisma client and run migrations:
+Fill in your `.env`. Generate strong JWT secrets with `openssl rand -base64 64`, then:
 
 ```bash
 npm run db:generate
 npm run db:migrate
-```
-
-Start the dev server:
-
-```bash
 npm run dev
-# API running at http://localhost:4000
 ```
 
----
+API runs at `http://localhost:4000`.
 
-### 3. Set up the Frontend
+**3. Set up the frontend**
 
 ```bash
-cd ../frontend
+cd frontend
 npm install
-```
-
-Create a local environment file:
-
-```bash
 echo 'NEXT_PUBLIC_API_URL=http://localhost:4000/api' > .env.local
-```
-
-Start Next.js:
-
-```bash
 npm run dev
-# App running at http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000), register an account, and start managing tasks.
+App runs at `http://localhost:3000`. Register an account and start managing tasks.
 
 ---
 
 ## 🔌 API Reference
 
-### Auth
+**Auth routes** — no token required
 
-| Method | Endpoint           | Auth | Description                        |
-|--------|--------------------|------|------------------------------------|
-| POST   | `/api/auth/register` | —   | Register a new user                |
-| POST   | `/api/auth/login`    | —   | Login and receive tokens           |
-| POST   | `/api/auth/refresh`  | —   | Rotate refresh token               |
-| POST   | `/api/auth/logout`   | —   | Revoke refresh token               |
-| GET    | `/api/auth/me`       | ✓   | Get the authenticated user         |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/register` | create a new account |
+| POST | `/api/auth/login` | sign in and receive tokens |
+| POST | `/api/auth/refresh` | rotate the refresh token |
+| POST | `/api/auth/logout` | revoke the refresh token |
+| GET | `/api/auth/me` | get the current user |
 
-### Tasks
+**Task routes** — Bearer token required
 
-| Method | Endpoint                | Auth | Description                                |
-|--------|-------------------------|------|--------------------------------------------|
-| GET    | `/api/tasks`            | ✓    | List tasks (paginated, filterable)         |
-| POST   | `/api/tasks`            | ✓    | Create a task                              |
-| GET    | `/api/tasks/stats`      | ✓    | Get task counts by status                  |
-| GET    | `/api/tasks/:id`        | ✓    | Get a single task                          |
-| PATCH  | `/api/tasks/:id`        | ✓    | Update a task                              |
-| DELETE | `/api/tasks/:id`        | ✓    | Delete a task                              |
-| PATCH  | `/api/tasks/:id/toggle` | ✓    | Toggle between PENDING ↔ COMPLETED         |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/tasks` | list tasks (paginated) |
+| POST | `/api/tasks` | create a task |
+| GET | `/api/tasks/stats` | get counts by status |
+| GET | `/api/tasks/:id` | get a single task |
+| PATCH | `/api/tasks/:id` | update a task |
+| DELETE | `/api/tasks/:id` | delete a task |
+| PATCH | `/api/tasks/:id/toggle` | toggle task status |
 
-#### Query Parameters for `GET /api/tasks`
+**Query params for `GET /api/tasks`**
 
-| Param    | Type                                   | Default      | Description              |
-|----------|----------------------------------------|--------------|--------------------------|
-| page     | number                                 | 1            | Page number              |
-| limit    | number (max 50)                        | 10           | Items per page           |
-| search   | string                                 | —            | Search title/description |
-| status   | PENDING \| IN_PROGRESS \| COMPLETED   | —            | Filter by status         |
-| priority | LOW \| MEDIUM \| HIGH                  | —            | Filter by priority       |
-| sortBy   | createdAt \| dueDate \| priority \| title | createdAt | Sort field            |
-| order    | asc \| desc                            | desc         | Sort direction           |
-
----
-
-## 🛠 Tech Stack
-
-| Layer       | Technology                              |
-|-------------|------------------------------------------|
-| Backend     | Node.js, Express, TypeScript             |
-| ORM         | Prisma (SQLite dev / PostgreSQL prod)    |
-| Auth        | JWT (jsonwebtoken), bcryptjs             |
-| Validation  | express-validator                        |
-| Frontend    | Next.js 14 (App Router), TypeScript      |
-| Styling     | Tailwind CSS (custom glassmorphism theme)|
-| State       | Zustand                                  |
-| Forms       | React Hook Form + Zod                    |
-| HTTP client | Axios (with interceptor-based refresh)   |
-| Animations  | Framer Motion                            |
-| Toasts      | react-hot-toast                          |
+| Param | Type | Default | Description |
+|-------|------|---------|-------------|
+| page | number | 1 | page number |
+| limit | number | 10 | items per page (max 50) |
+| search | string | — | search title and description |
+| status | PENDING / IN_PROGRESS / COMPLETED | — | filter by status |
+| priority | LOW / MEDIUM / HIGH | — | filter by priority |
+| sortBy | createdAt / dueDate / priority / title | createdAt | sort field |
+| order | asc / desc | desc | sort direction |
 
 ---
 
-## 🌐 Deployment
+## ⚙️ Environment Variables
 
-### Backend → Railway / Render
+**Backend** — all variables are documented in `.env.example`
 
-1. Set `DATABASE_URL` to a PostgreSQL connection string
-2. Update `prisma/schema.prisma` datasource provider to `"postgresql"`
-3. Run `npx prisma migrate deploy` as a release command
-
-### Frontend → Vercel
-
-```bash
-cd frontend
-vercel --prod
+```env
+DATABASE_URL=
+PORT=4000
+NODE_ENV=development
+CLIENT_URL=http://localhost:3000
+JWT_ACCESS_SECRET=
+JWT_REFRESH_SECRET=
+JWT_ACCESS_EXPIRES_IN=15m
+JWT_REFRESH_EXPIRES_IN=7d
 ```
 
-Set `NEXT_PUBLIC_API_URL` to your deployed backend URL in Vercel's environment settings.
+**Frontend**
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:4000/api
+```
+
+---
+
+## 🌍 Deployment
+
+| Layer | Platform | URL |
+|---|---|---|
+| Frontend | Vercel | https://taskflow-kappa-rouge.vercel.app |
+| Backend | Render | https://taskflow-q8q4.onrender.com |
+| Database | Railway | PostgreSQL |
+
+**Render — backend settings**
+
+Root directory: `backend`
+
+Build command:
+```bash
+npm install --include=dev && npx prisma generate && npx prisma db push && npm run build
+```
+
+Start command:
+```bash
+node dist/index.js
+```
+
+**Vercel — frontend settings**
+
+Root directory: `frontend`
+
+Add environment variable `NEXT_PUBLIC_API_URL` pointing to your Render backend URL.
 
 ---
 
 ## 📄 License
 
-MIT © 2024
+MIT © 2024 Avinash Kumar Gupta
